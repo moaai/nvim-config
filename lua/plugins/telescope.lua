@@ -44,7 +44,17 @@ return {
 					},
 				},
 			})
-			require("telescope").load_extension("fzf")
+
+			telescope.load_extension("fzf")
+
+			local builtin = require("telescope.builtin")
+
+			local keymap = vim.keymap
+			keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Search for files" })
+			keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Grep" })
+			keymap.set("n", "<leader>fb", builtin.buffers, { desc = "List open buffers" })
+			keymap.set("n", "<leader>fh", builtin.help_tags, {})
+			keymap.set("n", "<leader>fo", builtin.oldfiles, { desc = "List previously open files" })
 		end,
 	},
 }

@@ -1,79 +1,74 @@
--- Review this config
 return {
-	{
-		"hrsh7th/nvim-cmp",
-		-- load cmp on InsertEnter
-		event = "InsertEnter",
-		-- these dependencies will only be loaded when cmp loads
-		-- dependencies are always lazy-loaded unless specified otherwise
-		dependencies = {
-
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"hrsh7th/cmp-nvim-lsp",
-			-- "hrsh7th/cmp-nvim-lsp-signature-help",
-			"hrsh7th/cmp-vsnip",
-			"hrsh7th/vim-vsnip",
-			"onsails/lspkind.nvim",
+	"hrsh7th/nvim-cmp",
+	event = "InsertEnter",
+	dependencies = {
+		"hrsh7th/cmp-buffer", -- source for text in buffer
+		"hrsh7th/cmp-path", -- source for file system paths
+		"hrsh7th/cmp-nvim-lsp",
+		{
+			"L3MON4D3/LuaSnip",
+			-- follow latest release.
+			version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+			build = "make install_jsregexp",
 		},
-		config = function()
-			local cmp = require("cmp")
-			local lspkind = require("lspkind")
-
-			cmp.setup({
-				-- Enable LSP snippets
-				snippet = {
-					expand = function(args)
-						vim.fn["vsnip#anonymous"](args.body)
-					end,
-				},
-				mapping = {
-					["<C-p>"] = cmp.mapping.select_prev_item(),
-					["<C-n>"] = cmp.mapping.select_next_item(),
-					-- Add tab support
-					["<S-Tab>"] = cmp.mapping.select_prev_item(),
-					["<Tab>"] = cmp.mapping.select_next_item(),
-					["<C-S-f>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<C-e>"] = cmp.mapping.close(),
-					["<CR>"] = cmp.mapping.confirm({
-						behavior = cmp.ConfirmBehavior.Insert,
-						select = true,
-					}),
-				},
-				-- TODO Review orders here
-				-- Installed sources:
-				sources = {
-					{ name = "nvim_lsp", keyword_length = 3 }, -- from language server
-					{ name = "vsnip", keyword_length = 2 }, -- nvim-cmp source for vim-vsnip
-					{ name = "path" }, -- file paths
-					{ name = "buffer", keyword_length = 2 }, -- source current buffer
-					-- { name = 'nvim_lsp_signature_help' },              -- display function signatures with current parameter emphasized
-					-- { name = 'nvim_lua',               keyword_length = 2 }, -- complete neovim's Lua runtime API such vim.lsp.*
-					-- { name = 'calc' },                                 -- source for math calculation
-				},
-				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
-				},
-				formatting = {
-					format = lspkind.cmp_format({
-						mode = "symbol", -- show only symbol annotations
-						maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-						-- can also be a function to dynamically calculate max width such as
-						-- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
-						ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-						show_labelDetails = true, -- show labelDetails in menu. Disabled by default
-
-						-- The function below will be called before any actual modifications from lspkind
-						-- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-						before = function(entry, vim_item)
-							return vim_item
-						end,
-					}),
-				},
-			})
-		end,
+		"saadparwaiz1/cmp_luasnip", -- for autocompletion
+		"rafamadriz/friendly-snippets", -- useful snippets
+		"onsails/lspkind.nvim", -- vs-code like pictograms
+		-- "hrsh7th/cmp-vsnip",
+		-- "hrsh7th/vim-vsnip",
 	},
+	config = function()
+		local cmp = require("cmp")
+
+		local luasnip = require("luasnip")
+		local lspkind = require("lspkind")
+
+		require("luasnip.loaders.from_vscode").lazy_load()
+
+		cmp.setup({
+			completion = {
+				-- :help completeopt
+				-- menuone: popup even when there's only one match
+				-- noinsert: Do not insert text until a selection is made
+				-- noselect: Do not select, force to select one from the menu
+				-- shortness: avoid showing extra messages when using completion
+				-- updatetime: set updatetime for CursorHold
+				-- opt.completeopt = { 'menuone', 'noselect', 'noinsert' }
+				completeopt = "menu,menuone,preview,noselect",
+			},
+			snippet = { -- configure how nvim-cmp interacts with snippet engine
+				expand = function(args)
+					luasnip.lsp_expand(args.body)
+				end,
+			},
+			mapping = cmp.mapping.preset.insert({
+				["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
+				["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
+				["<C-b>"] = cmp.mapping.scroll_docs(-4),
+				["<C-f>"] = cmp.mapping.scroll_docs(4),
+				["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
+				["<C-e>"] = cmp.mapping.abort(), -- close completion window
+				["<CR>"] = cmp.mapping.confirm({ select = false }),
+			}),
+			-- sources for autocompletion
+			sources = cmp.config.sources({
+				{ name = "nvim_lsp" },
+				{ name = "luasnip" }, -- snippets
+				{ name = "buffer" }, -- text within current buffer
+				{ name = "path" }, -- file system paths
+			}),
+			window = {
+				completion = cmp.config.window.bordered(),
+				documentation = cmp.config.window.bordered(),
+			},
+			-- configure lspkind for vs-code like pictograms in completion menu
+			formatting = {
+				mode = "symbol",
+				format = lspkind.cmp_format({
+					maxwidth = 50,
+					ellipsis_char = "...",
+				}),
+			},
+		})
+	end,
 }

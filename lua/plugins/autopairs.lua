@@ -3,6 +3,16 @@ return {
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
-		config = true,
+		config = function()
+			local autopairs = require("nvim-autopairs")
+
+			autopairs.setup({})
+
+			-- You need to add mapping `CR` on nvim-cmp setup. Check readme.md on nvim-cmp repo.
+
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			local cmp = require("cmp")
+			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+		end,
 	},
 }

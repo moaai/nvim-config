@@ -13,18 +13,36 @@ return {
 			local mason_lspconfig = require("mason-lspconfig")
 			local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-			-- lspconfig.lua_ls.setup {}
-			-- lspconfig.ts_ls.setup {}
-			--
-			-- lspconfig.clangd.setup {}
-			-- lspconfig.pyright.setup {}
-
 			local capabilities = cmp_nvim_lsp.default_capabilities()
+
+			-- lspconfig["pyright"].setup({
+			-- 	capabilities = capabilities,
+			-- 	settings = {
+			-- 		pyright = {
+			-- 			disableOrganizeImports = true, -- Using Ruff
+			-- 		},
+			-- 		python = {
+			-- 			analysis = {
+			-- 				ignore = { "*" }, -- Using Ruff
+			-- 				-- typeCheckingMode = "off", -- Using mypy
+			-- 			},
+			-- 		},
+			-- 	},
+			-- })
+
+			-- lspconfig["ruff"].setup({
+			-- 	capabilities = capabilities,
+			-- })
 
 			mason_lspconfig.setup_handlers({
 				function(server_name)
 					lspconfig[server_name].setup({ capabilities = capabilities })
 				end,
+				-- ["ruff"] = function()
+				-- 	lspconfig["ruff"].setup({
+				-- 		capabilities = capabilities,
+				-- 	})
+				-- end,
 				-- custom setup ...
 				-- ["clangs"] = function()
 				--   lspconfig["clangd"].setup({
@@ -63,6 +81,13 @@ return {
 				--   prefix = '',
 				-- },
 			})
+
+			local keymap = vim.keymap
+
+			keymap.set("n", "<leader>fa", vim.lsp.buf.code_action, {})
+			keymap.set("n", "<leader>fh", function()
+				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+			end, { desc = "Toggles inline hints" })
 		end,
 	},
 }
