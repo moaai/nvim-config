@@ -1,14 +1,14 @@
 return {
 	{
-		"rebelot/kanagawa.nvim",
+		"folke/tokyonight.nvim",
 		priority = 1000,
 		config = function()
-			vim.cmd("colorscheme kanagawa")
+			vim.cmd("colorscheme tokyonight")
 		end,
 	},
 	{
+		"rebelot/kanagawa.nvim",
 		"joshdick/onedark.vim",
-		"folke/tokyonight.nvim",
 		"NLKNguyen/papercolor-theme",
 		"morhetz/gruvbox",
 		"dracula/vim",
