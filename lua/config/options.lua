@@ -4,12 +4,24 @@ vim.g.loaded_netrwPlugin = 1
 
 local opt = vim.opt
 
--- Sync clipboard
-opt.clipboard = "unnamedplus"
+-- Sync clipboard between OS and Neovim.
+-- Schedule the setting after `UiEnter` because it can increase startup-time.
+vim.schedule(function()
+	vim.opt.clipboard = "unnamedplus"
+end)
+
+vim.opt.breakindent = true
+
 opt.virtualedit = "block"
 opt.splitright = true
 
-vim.o.hls = false
+-- Clear highlights on search when pressing <Esc> in normal mode
+-- vim.o.hls = false
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
+-- Sets how neovim will display certain whitespace characters in the editor.
+vim.opt.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 opt.tabstop = 2
 opt.shiftwidth = 2
@@ -20,6 +32,9 @@ vim.o.termguicolors = true
 
 -- Minimal number of screen lines to keep above and below the cursor
 vim.opt.scrolloff = 10
+
+vim.opt.number = true
+vim.opt.relativenumber = true
 
 opt.shortmess = vim.opt.shortmess + { c = true }
 vim.api.nvim_set_option("updatetime", 300)
