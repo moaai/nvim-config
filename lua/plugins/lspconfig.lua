@@ -15,59 +15,11 @@ return {
 
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
-
-      -- lspconfig["pyright"].setup({
-      -- 	capabilities = capabilities,
-      -- 	settings = {
-      -- 		pyright = {
-      -- 			disableOrganizeImports = true, -- Using Ruff
-      -- 		},
-      -- 		python = {
-      -- 			analysis = {
-      -- 				ignore = { "*" }, -- Using Ruff
-      -- 				-- typeCheckingMode = "off", -- Using mypy
-      -- 			},
-      -- 		},
-      -- 	},
-      -- })
-
-      -- lspconfig["ruff"].setup({
-      -- 	capabilities = capabilities,
-      -- })
-
       mason_lspconfig.setup_handlers({
         function(server_name)
           lspconfig[server_name].setup({ capabilities = capabilities })
         end,
-        -- ["ruff"] = function()
-        -- 	lspconfig["ruff"].setup({
-        -- 		capabilities = capabilities,
-        -- 	})
-        -- end,
-        -- custom setup ...
-        -- ["clangs"] = function()
-        --   lspconfig["clangd"].setup({
-        --     capabilities = capabilities,
-        --     on_attach = function(client, bufnr)
-        --     end,
-        --   })
-        -- end,
       })
-
-      -- Move to options ???
-
-      local sign = function(opts)
-        vim.fn.sign_define(opts.name, {
-          texthl = opts.name,
-          text = opts.text,
-          numhl = "",
-        })
-      end
-
-      -- sign({ name = "DiagnosticSignError", text = "E" })
-      -- sign({ name = "DiagnosticSignWarn", text = "W" })
-      -- sign({ name = "DiagnosticSignHint", text = "H" })
-      -- sign({ name = "DiagnosticSignInfo", text = "I" })
 
       vim.diagnostic.config({
         virtual_text = false,
