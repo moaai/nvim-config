@@ -1,93 +1,95 @@
 return {
-	{
-		"neovim/nvim-lspconfig",
-		event = { "BufReadPre", "BufNewFile" },
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
 
-		dependencies = {
-			{ "hrsh7th/cmp-nvim-lsp" },
-			{ "folke/lazydev.nvim", opts = {} },
-			{ "antosha417/nvim-lsp-file-operations", config = true },
-		},
-		config = function()
-			local lspconfig = require("lspconfig")
-			local mason_lspconfig = require("mason-lspconfig")
-			local cmp_nvim_lsp = require("cmp_nvim_lsp")
+    dependencies = {
+      { "hrsh7th/cmp-nvim-lsp" },
+      { "folke/lazydev.nvim", opts = {} },
+      { "antosha417/nvim-lsp-file-operations", config = true },
+    },
+    config = function()
+      local lspconfig = require("lspconfig")
+      local mason_lspconfig = require("mason-lspconfig")
+      local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-			local capabilities = cmp_nvim_lsp.default_capabilities()
+      local capabilities = cmp_nvim_lsp.default_capabilities()
 
-			-- lspconfig["pyright"].setup({
-			-- 	capabilities = capabilities,
-			-- 	settings = {
-			-- 		pyright = {
-			-- 			disableOrganizeImports = true, -- Using Ruff
-			-- 		},
-			-- 		python = {
-			-- 			analysis = {
-			-- 				ignore = { "*" }, -- Using Ruff
-			-- 				-- typeCheckingMode = "off", -- Using mypy
-			-- 			},
-			-- 		},
-			-- 	},
-			-- })
 
-			-- lspconfig["ruff"].setup({
-			-- 	capabilities = capabilities,
-			-- })
+      -- lspconfig["pyright"].setup({
+      -- 	capabilities = capabilities,
+      -- 	settings = {
+      -- 		pyright = {
+      -- 			disableOrganizeImports = true, -- Using Ruff
+      -- 		},
+      -- 		python = {
+      -- 			analysis = {
+      -- 				ignore = { "*" }, -- Using Ruff
+      -- 				-- typeCheckingMode = "off", -- Using mypy
+      -- 			},
+      -- 		},
+      -- 	},
+      -- })
 
-			mason_lspconfig.setup_handlers({
-				function(server_name)
-					lspconfig[server_name].setup({ capabilities = capabilities })
-				end,
-				-- ["ruff"] = function()
-				-- 	lspconfig["ruff"].setup({
-				-- 		capabilities = capabilities,
-				-- 	})
-				-- end,
-				-- custom setup ...
-				-- ["clangs"] = function()
-				--   lspconfig["clangd"].setup({
-				--     capabilities = capabilities,
-				--     on_attach = function(client, bufnr)
-				--     end,
-				--   })
-				-- end,
-			})
+      -- lspconfig["ruff"].setup({
+      -- 	capabilities = capabilities,
+      -- })
 
-			-- Move to options ???
+      mason_lspconfig.setup_handlers({
+        function(server_name)
+          lspconfig[server_name].setup({ capabilities = capabilities })
+        end,
+        -- ["ruff"] = function()
+        -- 	lspconfig["ruff"].setup({
+        -- 		capabilities = capabilities,
+        -- 	})
+        -- end,
+        -- custom setup ...
+        -- ["clangs"] = function()
+        --   lspconfig["clangd"].setup({
+        --     capabilities = capabilities,
+        --     on_attach = function(client, bufnr)
+        --     end,
+        --   })
+        -- end,
+      })
 
-			local sign = function(opts)
-				vim.fn.sign_define(opts.name, {
-					texthl = opts.name,
-					text = opts.text,
-					numhl = "",
-				})
-			end
+      -- Move to options ???
 
-			sign({ name = "DiagnosticSignError", text = "E" })
-			sign({ name = "DiagnosticSignWarn", text = "W" })
-			sign({ name = "DiagnosticSignHint", text = "H" })
-			sign({ name = "DiagnosticSignInfo", text = "I" })
+      local sign = function(opts)
+        vim.fn.sign_define(opts.name, {
+          texthl = opts.name,
+          text = opts.text,
+          numhl = "",
+        })
+      end
 
-			vim.diagnostic.config({
-				virtual_text = true,
-				signs = true,
-				update_in_insert = true,
-				underline = true,
-				severity_sort = true,
-				-- float = {
-				--   border = 'rounded',
-				--   source = 'always',
-				--   header = '',
-				--   prefix = '',
-				-- },
-			})
+      -- sign({ name = "DiagnosticSignError", text = "E" })
+      -- sign({ name = "DiagnosticSignWarn", text = "W" })
+      -- sign({ name = "DiagnosticSignHint", text = "H" })
+      -- sign({ name = "DiagnosticSignInfo", text = "I" })
 
-			local keymap = vim.keymap
+      vim.diagnostic.config({
+        virtual_text = false,
+        virtual_lines = true,
+        -- signs = true,
+        update_in_insert = true,
+        underline = true,
+        severity_sort = true,
+        -- float = {
+        --   border = 'rounded',
+        --   source = 'always',
+        --   header = '',
+        --   prefix = '',
+        -- },
+      })
 
-			keymap.set("n", "<leader>fa", vim.lsp.buf.code_action, {})
-			keymap.set("n", "<leader>fh", function()
-				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-			end, { desc = "Toggles inline hints" })
-		end,
-	},
+      local keymap = vim.keymap
+
+      keymap.set("n", "<leader>fa", vim.lsp.buf.code_action, {})
+      keymap.set("n", "<leader>fh", function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+      end, { desc = "Toggles inline hints" })
+    end,
+  },
 }
