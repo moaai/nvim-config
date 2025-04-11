@@ -4,20 +4,36 @@ return {
     event = { "BufReadPre", "BufNewFile" },
 
     dependencies = {
-      { "hrsh7th/cmp-nvim-lsp" },
-      { "folke/lazydev.nvim", opts = {} },
-      { "antosha417/nvim-lsp-file-operations", config = true },
+      -- { "hrsh7th/cmp-nvim-lsp" },
+      { "saghen/blink.cmp" },
+      -- { "folke/lazydev.nvim", opts = {} },
+      -- { "antosha417/nvim-lsp-file-operations", config = true },
     },
     config = function()
       local lspconfig = require("lspconfig")
       local mason_lspconfig = require("mason-lspconfig")
-      local cmp_nvim_lsp = require("cmp_nvim_lsp")
+      local blink_nvim_lsp = require("blink.cmp")
 
-      local capabilities = cmp_nvim_lsp.default_capabilities()
+      local original_capabilities = vim.lsp.protocol.make_client_capabilities()
+      local capabilities = blink_nvim_lsp.get_lsp_capabilities(original_capabilities)
+
+      local servers = {
+        lua_ls = {
+          settings = {
+            Lua = {
+              diagnostics = {
+                globals = { "vim" },
+              },
+            },
+          },
+        },
+      }
 
       mason_lspconfig.setup_handlers({
         function(server_name)
-          lspconfig[server_name].setup({ capabilities = capabilities })
+          local server = servers[server_name] or {}
+          server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+          lspconfig[server_name].setup(server)
         end,
       })
 
