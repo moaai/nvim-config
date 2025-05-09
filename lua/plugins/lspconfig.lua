@@ -1,13 +1,10 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    -- event = { "BufReadPre", "BufNewFile" },
 
     dependencies = {
-      -- { "hrsh7th/cmp-nvim-lsp" },
-      { "saghen/blink.cmp" },
-      -- { "folke/lazydev.nvim", opts = {} },
-      -- { "antosha417/nvim-lsp-file-operations", config = true },
+      { "saghen/blink.cmp", { "j-hui/fidget.nvim", opts = {} } },
     },
     config = function()
       local lspconfig = require("lspconfig")
@@ -29,7 +26,7 @@ return {
         },
       }
 
-      mason_lspconfig.setup_handlers({
+      mason_lspconfig.setup({
         function(server_name)
           local server = servers[server_name] or {}
           server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
