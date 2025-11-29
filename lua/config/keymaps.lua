@@ -9,7 +9,7 @@ keymap.set("n", "<leader>6", "6gt", { desc = "Switch to Tab 6" })
 keymap.set("n", "<leader>7", "7gt", { desc = "Switch to Tab 7" })
 keymap.set("n", "<leader>8", "8gt", { desc = "Switch to Tab 7" })
 
-if vim.loop.os_uname().sysname == "Darwin" then
+if vim.loop.os_uname().sysname == "Darwin" or vim.loop.os_uname().sysname == "Linux" then
   keymap.set(
     "n",
     "<leader><CR>",
