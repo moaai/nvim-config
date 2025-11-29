@@ -7,7 +7,7 @@ local opt = vim.opt
 -- Sync clipboard between OS and Neovim.
 -- Schedule the setting after `UiEnter` because it can increase startup-time.
 vim.schedule(function()
-	vim.opt.clipboard = "unnamedplus"
+  vim.opt.clipboard = "unnamedplus"
 end)
 
 vim.opt.breakindent = true
@@ -23,8 +23,8 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
-opt.tabstop = 2
-opt.shiftwidth = 2
+-- opt.tabstop = 2
+-- opt.shiftwidth = 2
 opt.expandtab = true
 opt.autoindent = true
 
@@ -49,9 +49,13 @@ set signcolumn=yes
 
 -- Highlight when yanking
 vim.api.nvim_create_autocmd("TextYankPost", {
-	desc = "Highlight when yanking text",
-	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-	callback = function()
-		vim.highlight.on_yank()
-	end,
+  desc = "Highlight when yanking text",
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })
+
+-- Always show absolute line numbers
+vim.opt.number = true
+vim.opt.relativenumber = true

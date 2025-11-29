@@ -14,24 +14,98 @@ return {
       local original_capabilities = vim.lsp.protocol.make_client_capabilities()
       local capabilities = blink_nvim_lsp.get_lsp_capabilities(original_capabilities)
 
-      local servers = {
-        lua_ls = {
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { "vim" },
+      vim.lsp.config("lua_ls", {
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = {
+                "vim",
+                "require",
               },
             },
           },
         },
-      }
+      })
+
+      vim.lsp.config("basedpyright", {
+        settings = {
+          basedpyright = {
+            analysis = {
+              autoSearchPaths = true,
+              typeCheckingMode = "standard",
+            },
+          },
+        },
+      })
+
+      -- vim.lsp.config("ts_ls", {
+      --   settings = {
+      --     typescript = {
+      --       inlayHints = {
+      --         includeInlayParameterNameHints = "all", -- "none" | "literals" | "all"
+      --         includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+      --         includeInlayFunctionParameterTypeHints = true,
+      --         includeInlayVariableTypeHints = true,
+      --         includeInlayPropertyDeclarationTypeHints = true,
+      --         includeInlayFunctionLikeReturnTypeHints = true,
+      --         includeInlayEnumMemberValueHints = true,
+      --       },
+      --     },
+      --     javascript = {
+      --       inlayHints = {
+      --         includeInlayParameterNameHints = "all",
+      --         includeInlayFunctionParameterTypeHints = true,
+      --         includeInlayVariableTypeHints = true,
+      --         includeInlayPropertyDeclarationTypeHints = true,
+      --         includeInlayFunctionLikeReturnTypeHints = true,
+      --         includeInlayEnumMemberValueHints = true,
+      --       },
+      --     },
+      --   },
+      -- })
+
+      vim.lsp.config("vtsls", {
+        settings = {
+          vtsls = {
+            tsserver = {
+              maxTsServerMemory = 8192,
+            },
+          },
+          typescript = {
+            inlayHints = {
+              parameterNames = {
+                enabled = "all", -- "none" | "literals" | "all"
+              },
+              variableTypes = {
+                enabled = true,
+                suppressWhenTypeMatchesName = false,
+              },
+            },
+          },
+
+          javascript = {
+            inlayHints = {
+              parameterNames = {
+                enabled = "all",
+              },
+              variableTypes = {
+                enabled = true,
+                suppressWhenTypeMatchesName = false,
+              },
+            },
+          },
+        },
+      })
 
       mason_lspconfig.setup({
-        function(server_name)
-          local server = servers[server_name] or {}
-          server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-          lspconfig[server_name].setup(server)
-        end,
+        -- handlers = {
+        -- 	function(server_name)
+        -- 		print(server_name)
+        -- 		local server = servers[server_name] or {}
+        -- 		server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+        -- 		lspconfig[server_name].setup(server)
+        -- 	end,
+        -- },
       })
 
       vim.diagnostic.config({
@@ -48,13 +122,6 @@ return {
         --   prefix = '',
         -- },
       })
-
-      local keymap = vim.keymap
-
-      keymap.set("n", "<leader>fa", vim.lsp.buf.code_action, {})
-      keymap.set("n", "<leader>fh", function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-      end, { desc = "Toggles inline hints" })
     end,
   },
 }

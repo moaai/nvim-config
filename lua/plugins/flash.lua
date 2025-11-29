@@ -1,0 +1,102 @@
+return {
+  -- "folke/flash.nvim",
+  -- event = "VeryLazy",
+  -- opts = {
+  --   label = {
+  --     uppercase = false,
+  --     style = "inline", -- Inline on letters (no boxes/spacing)
+  --     rainbow = { enabled = false }, -- No rainbow — pure Hop style
+  --   },
+  --   modes = {
+  --     char = { enabled = true },
+  --     search = { enabled = true },
+  --   },
+  --   jump = { autojump = true },
+  --   highlight = {
+  --     backdrop = true, -- Dims non-matches like Hop
+  --     groups = {
+  --       match = "HopNextKey", -- Main match: bright orange fg
+  --       current = "HopNextKey", -- Current: same as match
+  --       label = "HopNextKey1", -- Labels: pink fg
+  --       backdrop = "HopUnmatched", -- Dim: light gray fg
+  --     },
+  --   },
+  -- },
+  -- config = function(_, opts)
+  --   require("flash").setup(opts)
+  --
+  --   -- === EXACT Hop.nvim Defaults (fg-only, no bg) ===
+  --   vim.api.nvim_set_hl(0, "HopNextKey", { fg = "#f07800", bg = nil }) -- Bright orange on letters
+  --   vim.api.nvim_set_hl(0, "HopNextKey1", { fg = "#b48ead", bg = nil }) -- Soft pink for close labels
+  --   vim.api.nvim_set_hl(0, "HopNextKey2", { fg = "#b48ead", bg = nil }) -- Soft pink for distant
+  --   vim.api.nvim_set_hl(0, "HopUnmatched", { fg = "#e5e9f0", bg = nil }) -- Subtle dim (adjust if too light/dark)
+  --
+  --   -- Link flash groups to Hop for consistency
+  --   vim.api.nvim_set_hl(0, "FlashLabel", { link = "HopNextKey1" })
+  --   vim.api.nvim_set_hl(0, "FlashMatch", { link = "HopNextKey" })
+  --   vim.api.nvim_set_hl(0, "FlashCurrent", { link = "HopNextKey" })
+  --   vim.api.nvim_set_hl(0, "FlashBackdrop", { link = "HopUnmatched" })
+  -- end,
+  -- -- Keep your keys unchanged (s, S, <leader>ww, etc.)
+  -- keys = {
+  --   {
+  --     "s",
+  --     mode = { "n", "x", "o" },
+  --     function()
+  --       require("flash").jump()
+  --     end,
+  --     desc = "Flash Jump",
+  --   },
+  --   {
+  --     "S",
+  --     mode = { "n", "x", "o" },
+  --     function()
+  --       require("flash").treesitter()
+  --     end,
+  --     desc = "Flash Treesitter",
+  --   },
+  --   -- Your <leader>ww HopWord replacement (unchanged)
+  --   {
+  --     "<leader>ww",
+  --     mode = { "n", "x", "o" },
+  --     function()
+  --       local Flash = require("flash")
+  --       local function format(opts)
+  --         return { { opts.match.label1, "FlashMatch" }, { opts.match.label2, "FlashLabel" } }
+  --       end
+  --       Flash.jump({
+  --         search = { mode = "search" },
+  --         label = { after = false, before = { 0, 0 }, format = format },
+  --         pattern = [[\<]],
+  --         action = function(match, state)
+  --           state:hide()
+  --           Flash.jump({
+  --             search = { max_length = 0 },
+  --             highlight = { matches = false },
+  --             label = { format = format },
+  --             matcher = function(win)
+  --               return vim.tbl_filter(function(m)
+  --                 return m.label == match.label and m.win == win
+  --               end, state.results)
+  --             end,
+  --             labeler = function(matches)
+  --               for _, m in ipairs(matches) do
+  --                 m.label = m.label2
+  --               end
+  --             end,
+  --           })
+  --         end,
+  --         labeler = function(matches, state)
+  --           local labels = state:labels()
+  --           for i, match in ipairs(matches) do
+  --             match.label1 = labels[math.floor((i - 1) / #labels) + 1]
+  --             match.label2 = labels[(i - 1) % #labels + 1]
+  --             match.label = match.label1
+  --           end
+  --         end,
+  --       })
+  --     end,
+  --     desc = "Flash Word Jump (HopWord style)",
+  --   },
+  -- },
+}
