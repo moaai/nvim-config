@@ -6,7 +6,6 @@ return {
 
     config = function()
       local telescope = require("telescope")
-      local builtin = require("telescope.builtin")
       telescope.setup({
         defaults = {
           path_display = { "smart" },

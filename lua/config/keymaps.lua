@@ -62,6 +62,9 @@ keymap.set("n", "<leader>td", "<cmd>Gitsigns toggle_deleted<CR>", { desc = "Togg
 keymap.set("n", "<leader>tl", "<cmd>Gitsigns toggle_linehl<CR>", { desc = "Toggle line highlight" })
 keymap.set("n", "<leader>tp", "<CMD>Gitsigns preview_hunk<CR>", { desc = "Preview hunk" })
 
+keymap.set("n", "<leader>tg", "<CMD>Neogit<CR>", { desc = "Show Neogit UI" })
+keymap.set("n", "<leader>td", "<CMD>DiffviewOpen<CR>", { desc = "Show Neogit UI" })
+
 -- ===================================================================
 -- <leader>f → Toggles
 -- ===================================================================
