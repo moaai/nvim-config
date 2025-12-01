@@ -9,23 +9,23 @@ return {
       -- vim.cmd("colorscheme onedark")
     end,
   },
-  {
-    "joshdick/onedark.vim",
-    priority = 1000,
-    config = function()
-      vim.cmd("colorscheme onedark")
-    end,
-  },
   -- {
-  --   "navarasu/onedark.nvim",
+  --   "joshdick/onedark.vim",
   --   priority = 1000,
   --   config = function()
-  --     require("onedark").setup({
-  --       style = "warmer",
-  --     })
-  --     require("onedark").load()
+  --     vim.cmd("colorscheme onedark")
   --   end,
   -- },
+  {
+    "navarasu/onedark.nvim",
+    priority = 1000,
+    config = function()
+      require("onedark").setup({
+        style = "warmer",
+      })
+      require("onedark").load()
+    end,
+  },
   {
     "rebelot/kanagawa.nvim",
     -- "joshdick/onedark.vim",
